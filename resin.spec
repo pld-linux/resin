@@ -75,7 +75,7 @@ cp -R doc/*  $RPM_BUILD_ROOT/home/services/httpd/resin
 install %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/resin/conf
 ln -sf %{_datadir}/resin/conf/resin.conf $RPM_BUILD_ROOT%{_sysconfdir}/httpd
 
-install src/c/plugin/apache/mod_caucho.so $RPM_BUILD_ROOT/%{_libexecdir}
+install src/c/plugin/apache/mod_caucho.so $RPM_BUILD_ROOT%{_libexecdir}
 install src/c/plugin/resin/resin $RPM_BUILD_ROOT%{_datadir}/resin/bin
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/resin
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/resin
@@ -114,28 +114,28 @@ fi
 %defattr(644,root,root,755)
 %doc LICENSE readme.txt conf/samples/*
 
-%attr(0660,root,http) %config(noreplace) %verify(not size mtime md5) %{_datadir}/resin/conf/resin.conf
-%attr(0640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/resin.conf
-%attr(0640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/sysconfig/resin
+%attr(660,root,http) %config(noreplace) %verify(not size mtime md5) %{_datadir}/resin/conf/resin.conf
+%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/resin.conf
+%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/sysconfig/resin
 %attr(754,root,root) /etc/rc.d/init.d/resin
 
-%attr(0755,root,root) %{_libexecdir}/mod_caucho.so
+%attr(755,root,root) %{_libexecdir}/mod_caucho.so
 
 %dir %{_datadir}/resin
 %dir %{_datadir}/resin/bin
-%attr(0755,root,root) %{_datadir}/resin/bin/*
+%attr(755,root,root) %{_datadir}/resin/bin/*
 %dir %{_datadir}/resin/lib
 %dir %{_datadir}/resin/xsl
 %{_datadir}/resin/lib/*
 %{_datadir}/resin/xsl/*
 
 %dir /var/lib/resin
-%attr(0770,root,http) /var/lib/resin/*
-%attr(0770,root,http) %dir /var/log/resin
-%attr(0770,root,http) %dir /var/run/resin
+%attr(770,root,http) /var/lib/resin/*
+%attr(770,root,http) %dir /var/log/resin
+%attr(770,root,http) %dir /var/run/resin
 
 %dir /home/services/httpd/resin
-%attr(0770,root,http) %dir /home/httpd/resin/WEB-INF
+%attr(770,root,http) %dir /home/httpd/resin/WEB-INF
 %dir /home/services/httpd/resin/examples
 %dir /home/services/httpd/resin/images
 %dir /home/services/httpd/resin/javadoc
