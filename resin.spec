@@ -6,12 +6,12 @@ License:	Caucho Developer Source License
 Group:		Networking/Daemons
 Group(de):	Netzwerkwesen/Server
 Group(pl):	Sieciowe/Serwery
-URL:		http://www.caucho.com
 Source0:	http://www.caucho.com/download/%{name}-%{version}.tar.gz
 Source1:	%{name}.conf
 Source2:	%{name}.init
 Source3:	%{name}.sysconfig
 Patch0:		%{name}-configure-test-httpd.conf.patch
+URL:		http://www.caucho.com/
 # Provides:	httpd
 # Provides:	webserver
 Provides:	jsp, servlet 
@@ -50,11 +50,11 @@ palm pilots to Mozilla.
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_libexecdir} \
-			  $RPM_BUILD_ROOT%{_sysconfdir}/{httpd,rc.d/init.d,sysconfig} \
-			  $RPM_BUILD_ROOT%{_datadir}/resin/{bin,lib,conf} \
-			  $RPM_BUILD_ROOT/home/httpd/resin/WEB-INF \
-			  $RPM_BUILD_ROOT/var/{run,log}/resin \
-			  $RPM_BUILD_ROOT/var/lib/resin/{cache,work}
+	  $RPM_BUILD_ROOT%{_sysconfdir}/{httpd,rc.d/init.d,sysconfig} \
+	  $RPM_BUILD_ROOT%{_datadir}/resin/{bin,lib,conf} \
+	  $RPM_BUILD_ROOT/home/httpd/resin/WEB-INF \
+	  $RPM_BUILD_ROOT/var/{run,log}/resin \
+	  $RPM_BUILD_ROOT/var/lib/resin/{cache,work}
 
 cp -R bin lib xsl $RPM_BUILD_ROOT%{_datadir}/resin
 cp -R doc/*  $RPM_BUILD_ROOT/home/httpd/resin
