@@ -46,7 +46,10 @@ Palm Pilotów do Mozilli.
 %patch0 -p1
 
 %build
-%configure \
+#aclocal
+#autoconf
+#cp -f /usr/share/automake/config.* .
+%configure2_13 \
 	--with-apache
 # should be found depending on location of `java' binary
 # and/or JAVA_HOME
