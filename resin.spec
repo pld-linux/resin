@@ -76,8 +76,8 @@ ln -sf %{_datadir}/resin/conf/resin.conf $RPM_BUILD_ROOT%{_sysconfdir}/httpd
 
 install src/c/plugin/apache/mod_caucho.so $RPM_BUILD_ROOT/%{_libexecdir}
 install src/c/plugin/resin/resin $RPM_BUILD_ROOT%{_datadir}/resin/bin
-install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/resin
-install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/resin
+install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/resin
+install %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/resin
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -115,7 +115,7 @@ fi
 
 %attr(0660,root,http) %config(noreplace) %verify(not size mtime md5) %{_datadir}/resin/conf/resin.conf
 %attr(0640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/resin.conf
-%attr(0640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/sysconfig/resin
+%attr(0640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/sysconfig/resin
 %attr(754,root,root) /etc/rc.d/init.d/resin
 
 %attr(0755,root,root) %{_libexecdir}/mod_caucho.so
