@@ -86,7 +86,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %preun
 if [ "$1" = "0" ]; then
-	%{_sbindir}/apxs -e -A -n caucho %{_libexecdir}/mod_caucho.so 1>&2
+	%{apxs} -e -A -n caucho %{_libexecdir}/mod_caucho.so 1>&2
 	if [ -f /var/lock/subsys/httpd ]; then
 		/etc/rc.d/init.d/httpd restart 1>&2
 	fi
@@ -98,7 +98,7 @@ fi
 
 %post
 /sbin/chkconfig --add resin
-%{_sbindir}/apxs -e -a -n caucho %{_libexecdir}/mod_caucho.so 1>&2
+%{apxs} -e -a -n caucho %{_libexecdir}/mod_caucho.so 1>&2
 if [ -f /var/lock/subsys/httpd ]; then
 	if [ -f /var/lock/subsys/resin ]; then
 		/etc/rc.d/init.d/resin restart 1>&2
