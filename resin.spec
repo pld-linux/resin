@@ -11,19 +11,21 @@ Source2:	%{name}.init
 Source3:	%{name}.sysconfig
 Patch0:		%{name}-configure-test-httpd.conf.patch
 URL:		http://www.caucho.com/
+BuildRequires:	apache-devel
+BuildRequires:	jdk >= 1.2
+Requires(post,preun):	/sbin/chkconfig
+Requires(post,preun):	/usr/sbin/apxs
+Requires:	apache
+Requires:	apache(EAPI)
+# for running even kaffe should be enough, since it's java 1.1
+Requires:	jre >= 1.1
 # Provides:	httpd
 # Provides:	webserver
 Provides:	jsp, servlet
-Prereq:		/sbin/chkconfig
-Prereq:		%{_sbindir}/apxs
-BuildRequires:	apache-devel
-Requires:	apache
-Requires:	apache(EAPI)
-# rather necessary, but does it matter if pld doesn't contain any? ;-)
-# BuildRequires:	jdk >= 1.2
-# for running even kaffe should be enough, since it's java 1.1
-Requires:	jre >= 1.1
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define		_libexecdir	%{_prefix}/lib/apache
+%define		apxs		/usr/sbin/apxs
 
 %description
 Resin is a fast servlet and JSP engine supporting load balancing for
@@ -39,8 +41,6 @@ stylu poprzez obs³ugê XSL. Servlety mog± generowaæ prosy XML i u¿ywaæ
 filtra XSL do formatowania wyników zale¿nie od mo¿liwo¶ci klienta, od
 Palm Pilotów do Mozilli.
 
-%define		_libexecdir	%{_prefix}/lib/apache
-%define		apxs		/usr/sbin/apxs
 %prep
 %setup -q -n %{name}%{version}
 %patch0 -p1
@@ -79,8 +79,6 @@ install src/c/plugin/resin/resin $RPM_BUILD_ROOT%{_datadir}/resin/bin
 install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/resin
 install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/resin
 
-gzip -9nf LICENSE readme.txt conf/samples/*
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -113,7 +111,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc LICENSE.gz readme.txt.gz conf/samples/*gz
+%doc LICENSE readme.txt conf/samples/*
 
 %attr(0660,root,http) %config(noreplace) %verify(not size mtime md5) %{_datadir}/resin/conf/resin.conf
 %attr(0640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/resin.conf
