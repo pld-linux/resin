@@ -1,4 +1,5 @@
 Summary:	A fast servlet and JSP engine
+Summary(pl):	Szybki silnik servletów i JSP
 Name:		resin
 Version:	1.2.1
 Release:	1
@@ -33,6 +34,13 @@ style with its XSL support. Servlets can generate simple XML and use
 an XSL filter to format results for each client's capability, from
 palm pilots to Mozilla.
 
+%description -l pl
+Resin to szybki silnik servletowy i JSP, obs³uguj±cy load balancing
+aby osi±gn±æ wiêksz± niezawodno¶æ. Resin wspiera oddzielenie tre¶ci od
+stylu poprzez obs³ugê XSL. Servlety mog± generowaæ prosy XML i u¿ywaæ
+filtra XSL do formatowania wyników zale¿nie od mo¿liwo¶ci klienta, od
+Palm Pilotów do Mozilli.
+
 %define		_libexecdir	%{_prefix}/lib/apache
 
 %prep 
@@ -63,7 +71,7 @@ cp -R doc/*  $RPM_BUILD_ROOT/home/httpd/resin
 # unfortunately a http user has no permissions in %{_sysconfdir}/httpd,
 # so resin.init has to use a different (default) directory :-/
 install %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/resin/conf
-ln -s %{_datadir}/resin/conf/resin.conf $RPM_BUILD_ROOT%{_sysconfdir}/httpd
+ln -sf %{_datadir}/resin/conf/resin.conf $RPM_BUILD_ROOT%{_sysconfdir}/httpd
 
 install src/c/plugin/apache/mod_caucho.so $RPM_BUILD_ROOT/%{_libexecdir}
 install src/c/plugin/resin/resin $RPM_BUILD_ROOT%{_datadir}/resin/bin
@@ -71,6 +79,9 @@ install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/resin
 install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/resin
 
 gzip -9nf LICENSE readme.txt conf/samples/*
+
+%clean
+rm -rf $RPM_BUILD_ROOT
 
 %preun
 if [ "$1" = "0" ]; then
@@ -98,9 +109,6 @@ else
 	echo "Run \"/etc/rc.d/init.d/resin start\" to start resin daemon."
 	echo "Run \"/etc/rc.d/init.d/httpd start\" to start apache http daemon."
 fi
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
