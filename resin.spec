@@ -40,7 +40,7 @@ filtra XSL do formatowania wyników zale¿nie od mo¿liwo¶ci klienta, od
 Palm Pilotów do Mozilli.
 
 %define		_libexecdir	%{_prefix}/lib/apache
-
+%define		apxs		/usr/sbin/apxs
 %prep
 %setup -q -n %{name}%{version}
 %patch0 -p1
