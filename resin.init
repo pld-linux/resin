@@ -1,0 +1,53 @@
+#!/bin/sh
+#
+# resin Resin JSP/Servlet Support
+#
+# chkconfig:	345 80 20
+# description:	Resin is JSP/Servlet support for apache
+# processname:	resin
+# pidfile:	/var/run/resin/pid
+# config:	/etc/httpd/resin.conf
+#
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# Get service config
+[ -f /etc/sysconfig/resin ] && . /etc/sysconfig/resin
+
+# See how we were called.
+case "$1" in
+   start)
+	# Check if the service is already running?
+   if [ ! -f /var/lock/subsys/resin ]; then
+      run_cmd "Starting Resin JSP Server" 'su -s /bin/sh http -c "/usr/share/resin/bin/srun.sh -stdout /dev/null -stderr /var/log/resin/startup.errors -pid /var/run/resin/pid start"'
+      if [ $? -eq 0 ]; then
+         touch /var/lock/subsys/resin
+      fi
+   else
+      msg_Already_Running resin
+      exit 1
+   fi
+	;;
+   stop)
+   # Stop daemons.
+   if [ -f /var/lock/subsys/resin ]; then
+      run_cmd "Stopping Resin JSP Server" 'su -s /bin/sh http -c "/usr/share/resin/bin/srun.sh -stdout /dev/null -stderr /var/log/resin/startup.errors -pid /var/run/resin/pid stop"'
+      if [ $? -eq 0 ]; then
+         rm -f /var/lock/subsys/resin >/dev/null 2>&1
+      fi
+   else
+ 	  msg_Not_Running resin
+ 	  exit 1
+   fi
+	;;
+   restart|reload)
+      $0 stop
+      $0 start
+	;;
+   *)
+	msg_Usage "$0 {start|stop|restart}"
+	exit 1
+	;;
+esac
+
+exit 0
