@@ -72,29 +72,20 @@ install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/resin
 gzip -9nf LICENSE readme.txt conf/samples/*
 
 %preun
+%chkconfig_del
 if [ "$1" = "0" ]; then
 	%{_sbindir}/apxs -e -A -n caucho %{_libexecdir}/mod_caucho.so 1>&2
 	if [ -f /var/lock/subsys/httpd ]; then
 		/etc/rc.d/init.d/httpd restart 1>&2
 	fi
-	if [ -f /var/lock/subsys/resin ]; then
-		/etc/rc.d/init.d/resin stop 1>&2
-	fi
-	/sbin/chkconfig --del resin
 fi
 
 %post
-/sbin/chkconfig --add resin
 %{_sbindir}/apxs -e -a -n caucho %{_libexecdir}/mod_caucho.so 1>&2
+DESC="resin daemon"; %chkconfig_add
 if [ -f /var/lock/subsys/httpd ]; then
-	if [ -f /var/lock/subsys/resin ]; then
-		/etc/rc.d/init.d/resin restart 1>&2
-	else
-		echo "Run \"/etc/rc.d/init.d/resin start\" to start resin daemon."
-	fi
 	/etc/rc.d/init.d/httpd restart 1>&2
 else
-	echo "Run \"/etc/rc.d/init.d/resin start\" to start resin daemon."
 	echo "Run \"/etc/rc.d/init.d/httpd start\" to start apache http daemon."
 fi
 
