@@ -62,12 +62,12 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_libexecdir} \
 	  $RPM_BUILD_ROOT%{_sysconfdir}/{httpd,rc.d/init.d,sysconfig} \
 	  $RPM_BUILD_ROOT%{_datadir}/resin/{bin,lib,conf} \
-	  $RPM_BUILD_ROOT/home/httpd/resin/WEB-INF \
+	  $RPM_BUILD_ROOT/home/services/httpd/resin/WEB-INF \
 	  $RPM_BUILD_ROOT/var/{run,log}/resin \
 	  $RPM_BUILD_ROOT/var/lib/resin/{cache,work}
 
 cp -R bin lib xsl $RPM_BUILD_ROOT%{_datadir}/resin
-cp -R doc/*  $RPM_BUILD_ROOT/home/httpd/resin
+cp -R doc/*  $RPM_BUILD_ROOT/home/services/httpd/resin
 
 # unfortunately a http user has no permissions in %{_sysconfdir}/httpd,
 # so resin.init has to use a different (default) directory :-/
@@ -133,18 +133,18 @@ fi
 %attr(0770,root,http) %dir /var/log/resin
 %attr(0770,root,http) %dir /var/run/resin
 
-%dir /home/httpd/resin
+%dir /home/services/httpd/resin
 %attr(0770,root,http) %dir /home/httpd/resin/WEB-INF
-%dir /home/httpd/resin/examples
-%dir /home/httpd/resin/images
-%dir /home/httpd/resin/javadoc
-%dir /home/httpd/resin/java_tut
-%dir /home/httpd/resin/ref
-%dir /home/httpd/resin/css
-/home/httpd/resin/examples/*
-/home/httpd/resin/images/*
-/home/httpd/resin/javadoc/*
-/home/httpd/resin/java_tut/*
-/home/httpd/resin/ref/*
-/home/httpd/resin/*.xtp
-/home/httpd/resin/toc.xml
+%dir /home/services/httpd/resin/examples
+%dir /home/services/httpd/resin/images
+%dir /home/services/httpd/resin/javadoc
+%dir /home/services/httpd/resin/java_tut
+%dir /home/services/httpd/resin/ref
+%dir /home/services/httpd/resin/css
+/home/services/httpd/resin/examples/*
+/home/services/httpd/resin/images/*
+/home/services/httpd/resin/javadoc/*
+/home/services/httpd/resin/java_tut/*
+/home/services/httpd/resin/ref/*
+/home/services/httpd/resin/*.xtp
+/home/services/httpd/resin/toc.xml
