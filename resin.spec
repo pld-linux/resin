@@ -105,7 +105,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc LICENSE.gz readme.txt.gz conf/samples/*gz
 
-%attr(0640,http,root) %config(noreplace) %verify(not size mtime md5) %{_datadir}/resin/conf/resin.conf
+%attr(0660,root,http) %config(noreplace) %verify(not size mtime md5) %{_datadir}/resin/conf/resin.conf
 %attr(0640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/resin.conf
 %attr(0640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/sysconfig/resin
 %attr(754,root,root) /etc/rc.d/init.d/resin
@@ -121,12 +121,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/resin/xsl/*
 
 %dir /var/lib/resin
-%attr(0750,http,root) /var/lib/resin/*
-%attr(0750,http,root) %dir /var/log/resin
-%attr(0750,http,root) %dir /var/run/resin
+%attr(0770,root,http) /var/lib/resin/*
+%attr(0770,root,http) %dir /var/log/resin
+%attr(0770,root,http) %dir /var/run/resin
 
 %dir /home/httpd/resin
-%attr(0750,http,root) %dir /home/httpd/resin/WEB-INF
+%attr(0770,root,http) %dir /home/httpd/resin/WEB-INF
 %dir /home/httpd/resin/examples
 %dir /home/httpd/resin/images
 %dir /home/httpd/resin/javadoc
