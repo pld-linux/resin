@@ -43,7 +43,7 @@ palm pilots to Mozilla.
 	--with-apache
 # should be found depending on location of `java' binary
 # and/or JAVA_HOME
-#	--with-java-home=/opt/IBMJava2-13 \
+#	 --with-java-home=/opt/IBMJava2-13 \
 			
 %{__make} 
 
