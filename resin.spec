@@ -6,6 +6,7 @@ Release:	2
 License:	Caucho Developer Source License
 Group:		Networking/Daemons
 Source0:	http://www.caucho.com/download/%{name}-%{version}.tar.gz
+# Source0-md5:	71cb5f131c73792f3cd13f9e2af04bc3
 Source1:	%{name}.conf
 Source2:	%{name}.init
 Source3:	%{name}.sysconfig
