@@ -1,0 +1,38 @@
+diff -Nru resin1.2.b3/configure resin1.2.b3.orig/configure
+--- resin1.2.b3/configure	Tue Oct 24 20:36:37 2000
++++ resin1.2.b3.orig/configure	Fri Nov  3 13:02:32 2000
+@@ -1569,29 +1569,15 @@
+   { echo "configure: error: Can't find Apache module directory ${apache_libexec}" 1>&2; exit 1; }
+ fi
+ 
+-#
+-# Heuristics for finding the Apache configuration directory
+-#
++# in PLD /etc/httpd and httpd.conf are unreadable for lusers,
++# and we should assume they're in /etc/httpd/httpd.conf 
+ if test -z "${apache_conf}" -a -n "${apxs}"; then
+   conf_dir=`${apxs} -q SYSCONFDIR`
+-
+-  if test -r "${conf_dir}"/httpd.conf; then
+-    apache_conf=${conf_dir}/httpd.conf
+-  elif test -r "${conf_dir}"/apache.conf; then
+-    apache_conf=${conf_dir}/apache.conf
+-  fi
+-fi
+-
+-if test -z "${apache_conf}" -a -r "${apache_dir}/conf/httpd.conf"; then
+-  apache_conf=${apache_dir}/conf/httpd.conf
+-fi
+-
+-if test -z "${apache_conf}" -a -r "${apache_dir}/etc/httpd.conf"; then
+-  apache_conf=${apache_dir}/etc/httpd.conf
++  apache_conf=${conf_dir}/httpd.conf
+ fi
+ 
+-if test -n "$apache" -a ! -r "${apache_conf}"; then
+-  { echo "configure: error: Can't find Apache module configuration ${apache_conf}" 1>&2; exit 1; }
++if test -n "$apache" -a -z "${apache_conf}"; then
++  { echo "configure: error: Apache module configuration not found/specified" 1>&2; exit 1; }
+ fi
+ #
+ # Heuristics for testing eapi
