@@ -5,8 +5,6 @@ Version:	1.2.1
 Release:	1
 License:	Caucho Developer Source License
 Group:		Networking/Daemons
-Group(de):	Netzwerkwesen/Server
-Group(pl):	Sieciowe/Serwery
 Source0:	http://www.caucho.com/download/%{name}-%{version}.tar.gz
 Source1:	%{name}.conf
 Source2:	%{name}.init
