@@ -17,6 +17,7 @@ URL:		http://www.caucho.com/
 Provides:	jsp, servlet 
 Prereq:		/sbin/chkconfig
 Prereq:		%{_sbindir}/apxs
+BuildRequires:	apache-devel
 Requires:	apache
 Requires:	apache(EAPI)
 # rather necessary, but does it matter if pld doesn't contain any? ;-)
