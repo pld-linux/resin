@@ -38,9 +38,9 @@ palm pilots to Mozilla.
 %description -l pl
 Resin to szybki silnik servletowy i JSP, obs³uguj±cy load balancing
 aby osi±gn±æ wiêksz± niezawodno¶æ. Resin wspiera oddzielenie tre¶ci od
-stylu poprzez obs³ugê XSL. Servlety mog± generowaæ prosy XML i u¿ywaæ
-filtra XSL do formatowania wyników zale¿nie od mo¿liwo¶ci klienta, od
-Palm Pilotów do Mozilli.
+stylu poprzez obs³ugê XSL-a. Servlety mog± generowaæ prosty XML i
+u¿ywaæ filtra XSL do formatowania wyników zale¿nie od mo¿liwo¶ci
+klienta, od Palm Pilotów do Mozilli.
 
 %prep
 %setup -q -n %{name}%{version}
