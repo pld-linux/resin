@@ -2,7 +2,7 @@ Summary:	A fast servlet and JSP engine
 Summary(pl):	Szybki silnik servletów i JSP
 Name:		resin
 Version:	1.2.1
-Release:	1
+Release:	2
 License:	Caucho Developer Source License
 Group:		Networking/Daemons
 Source0:	http://www.caucho.com/download/%{name}-%{version}.tar.gz
@@ -50,7 +50,7 @@ Palm Pilotów do Mozilli.
 	--with-apache
 # should be found depending on location of `java' binary
 # and/or JAVA_HOME
-#	 --with-java-home=/opt/IBMJava2-13 \
+#	 --with-java-home=%{_libdir}/java \
 
 %{__make}
 
