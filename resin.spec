@@ -1,6 +1,6 @@
 Summary:	A fast servlet and JSP engine
 Name:		resin
-Version:	1.2.0
+Version:	1.2.1
 Release:	1
 License:	Caucho Developer Source License
 Group:		Networking/Daemons
