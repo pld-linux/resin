@@ -13,7 +13,7 @@ Patch0:		%{name}-configure-test-httpd.conf.patch
 URL:		http://www.caucho.com/
 # Provides:	httpd
 # Provides:	webserver
-Provides:	jsp, servlet 
+Provides:	jsp, servlet
 Prereq:		/sbin/chkconfig
 Prereq:		%{_sbindir}/apxs
 BuildRequires:	apache-devel
@@ -41,7 +41,7 @@ Palm Pilotów do Mozilli.
 
 %define		_libexecdir	%{_prefix}/lib/apache
 
-%prep 
+%prep
 %setup -q -n %{name}%{version}
 %patch0 -p1
 
@@ -51,8 +51,8 @@ Palm Pilotów do Mozilli.
 # should be found depending on location of `java' binary
 # and/or JAVA_HOME
 #	 --with-java-home=/opt/IBMJava2-13 \
-			
-%{__make} 
+
+%{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
