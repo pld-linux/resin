@@ -1,28 +1,36 @@
+
+# TODO:
+#   - test the Apache module
+#   - review by PLD Java and Apache specialists
+
 Summary:	A fast servlet and JSP engine
 Summary(pl):	Szybki silnik servletów i JSP
 Name:		resin
-Version:	1.2.1
-Release:	2
-License:	Caucho Developer Source License
+Version:	3.0.13
+Release:	0.1
+License:	GPL
 Group:		Networking/Daemons
 Source0:	http://www.caucho.com/download/%{name}-%{version}.tar.gz
-# Source0-md5:	71cb5f131c73792f3cd13f9e2af04bc3
-Source1:	%{name}.conf
+# Source0-md5:	4e5a07b29b6b8ed86630c169bf62aba2
+Source1:	%{name}-mod_caucho.conf
 Source2:	%{name}.init
 Source3:	%{name}.sysconfig
 Patch0:		%{name}-configure-test-httpd.conf.patch
+Patch1:		%{name}-apache2-test.patch
+Patch2:		%{name}-paths.patch
 URL:		http://www.caucho.com/
 BuildRequires:	apache-devel
 BuildRequires:	jdk >= 1.2
 Requires(post,preun):	/sbin/chkconfig
 Requires(post,preun):	/usr/sbin/apxs
 Requires:	apache
-Requires:	apache(EAPI)
 # for running even kaffe should be enough, since it's java 1.1
 Requires:	jre >= 1.1
 # Provides:	httpd
 # Provides:	webserver
 Provides:	jsp, servlet
+Provides:	group(http)
+Provides:	user(http)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_libexecdir	%{_prefix}/lib/apache
@@ -35,6 +43,9 @@ style with its XSL support. Servlets can generate simple XML and use
 an XSL filter to format results for each client's capability, from
 palm pilots to Mozilla.
 
+This package provides the standalone Resin webserver only. Install
+"apache-mod_caucho" package to use Resin with apache.
+
 %description -l pl
 Resin to szybki silnik servletowy i JSP, obs³uguj±cy load balancing
 aby osi±gn±æ wiêksz± niezawodno¶æ. Resin wspiera oddzielenie tre¶ci od
@@ -42,16 +53,58 @@ stylu poprzez obs³ugê XSL-a. Servlety mog± generowaæ prosty XML i
 u¿ywaæ filtra XSL do formatowania wyników zale¿nie od mo¿liwo¶ci
 klienta, od Palm Pilotów do Mozilli.
 
+Ten pakiet zawiera jedynie samodzielny serwer WWW Resina. Aby u¿yæ
+Resin z Apache nale¿y zainstalowaæ dodatkowo pakiet
+"apache-mod_caucho".
+
+%package -n apache-mod_caucho
+Summary:	An Apache module for Resin servlet and JSP engine
+Summary(pl):	Modu³ Apache dla silnika servletów i JSP
+Group:		Networking/Daemons
+Requires(post,preun):	/usr/sbin/apxs
+Requires:	apache
+Requires:	apache(EAPI)
+Requires:	resin = %{epoch}:%{version}-%{release}
+
+%description -n apache-mod_caucho
+An Apache module for Resin servlet and JSP engine.
+
+%description -n apache-mod_caucho -l pl
+Modu³ Apache dla silnika servletów i JSP.
+
+%package doc
+Summary:	Resin online documentation
+Summary(pl):	Dokumentacja online dla Resin
+Group:		Networking/Daemons
+Requires:	resin = %{epoch}:%{version}-%{release}
+
+%description doc
+Provides Resin documentation as http://localhost:8080/resin-doc/
+(assuming default Resin configuration).
+
+%description doc
+Udostêpnia dokumentacjê Resin jako http://localhost:8080/resin-doc/
+(zak³adaj±c domy¶ln± konfiguracjê Resin).
+
 %prep
-%setup -q -n %{name}%{version}
+%setup -q
 %patch0 -p1
+%patch1 -p1
+%patch2 -p1
 
 %build
+
+# this are available in the -src tarball only, which is harder to build
+#rm -f configure # to get permissions right
 #aclocal
 #autoconf
-#cp -f /usr/share/automake/config.* .
-%configure2_13 \
-	--with-apache
+
+cp -f /usr/share/automake/config.* .
+%configure \
+--with-apxs=%{_sbindir}/apxs \
+	--with-apache \
+--with-jni-include="-I%{_prefix}/lib/java/include -I%{_prefix}/lib/java/include/linux" \
+	CFLAGS="%{rpmcflags} `%{_bindir}/apr-1-config --includes --cppflags` `%{_bindir}/apu-1-config --includes`"
 # should be found depending on location of `java' binary
 # and/or JAVA_HOME
 #	 --with-java-home=%{_libdir}/java \
@@ -61,34 +114,43 @@ klienta, od Palm Pilotów do Mozilli.
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_libexecdir} \
-	  $RPM_BUILD_ROOT%{_sysconfdir}/{httpd,rc.d/init.d,sysconfig} \
-	  $RPM_BUILD_ROOT%{_datadir}/resin/{bin,lib,conf} \
-	  $RPM_BUILD_ROOT/home/services/httpd/resin/WEB-INF \
+	  $RPM_BUILD_ROOT%{_sysconfdir}/{resin,httpd/httpd.conf,rc.d/init.d,sysconfig} \
+	  $RPM_BUILD_ROOT%{_datadir}/resin/{lib,bin,webapps} \
+	  $RPM_BUILD_ROOT%{_libdir}/resin \
 	  $RPM_BUILD_ROOT/var/{run,log}/resin \
-	  $RPM_BUILD_ROOT/var/lib/resin/{cache,work}
+	  $RPM_BUILD_ROOT/var/lib/resin/{cache,work,tmp,webapps}
 
-cp -R bin lib xsl $RPM_BUILD_ROOT%{_datadir}/resin
-cp -R doc/*  $RPM_BUILD_ROOT/home/services/httpd/resin
+cd modules/c/src/apache2
+../../../../libtool  --mode=install install mod_caucho.la $RPM_BUILD_ROOT/%{_libexecdir}
+rm $RPM_BUILD_ROOT/%{_libexecdir}/*{.a,.la}
+cd ../../../..
 
-# unfortunately a http user has no permissions in %{_sysconfdir}/httpd,
-# so resin.init has to use a different (default) directory :-/
-install %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/resin/conf
-ln -sf %{_datadir}/resin/conf/resin.conf $RPM_BUILD_ROOT%{_sysconfdir}/httpd
+cp -R bin/*{.sh,.pl} $RPM_BUILD_ROOT%{_datadir}/resin/bin
+cp -R conf/* $RPM_BUILD_ROOT%{_sysconfdir}/resin
+cp -R lib/* $RPM_BUILD_ROOT%{_datadir}/resin/lib
+cp -R webapps/* $RPM_BUILD_ROOT%{_datadir}/resin/webapps
 
-install src/c/plugin/apache/mod_caucho.so $RPM_BUILD_ROOT%{_libexecdir}
-install src/c/plugin/resin/resin $RPM_BUILD_ROOT%{_datadir}/resin/bin
+install modules/c/src/resin_os/libresin_os.so $RPM_BUILD_ROOT%{_libdir}/resin
+
+install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/70_mod_caucho.conf
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/resin
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/resin
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%pre
+%groupadd -g 51 http
+%useradd -u 51 -r -d /home/services/httpd -s /bin/false -c "HTTP User" -g http http
+
+%postun
+if [ "$1" = "0" ]; then
+	%userremove http
+	%groupremove http
+fi
+
 %preun
 if [ "$1" = "0" ]; then
-	%{apxs} -e -A -n caucho %{_libexecdir}/mod_caucho.so 1>&2
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
 	if [ -f /var/lock/subsys/resin ]; then
 		/etc/rc.d/init.d/resin stop 1>&2
 	fi
@@ -97,55 +159,68 @@ fi
 
 %post
 /sbin/chkconfig --add resin
-%{apxs} -e -a -n caucho %{_libexecdir}/mod_caucho.so 1>&2
-if [ -f /var/lock/subsys/httpd ]; then
-	if [ -f /var/lock/subsys/resin ]; then
-		/etc/rc.d/init.d/resin restart 1>&2
-	else
-		echo "Run \"/etc/rc.d/init.d/resin start\" to start resin daemon."
-	fi
-	/etc/rc.d/init.d/httpd restart 1>&2
+if [ -f /var/lock/subsys/resin ]; then
+	/etc/rc.d/init.d/resin restart 1>&2
 else
 	echo "Run \"/etc/rc.d/init.d/resin start\" to start resin daemon."
+fi
+
+%preun -n apache-mod_caucho
+if [ "$1" = "0" ]; then
+	%{apxs} -e -A -n caucho %{_libexecdir}/mod_caucho.so 1>&2
+	if [ -f /var/lock/subsys/httpd ]; then
+		/etc/rc.d/init.d/httpd restart 1>&2
+	fi
+fi
+
+%post -n apache-mod_caucho
+%{apxs} -e -a -n caucho %{_libexecdir}/mod_caucho.so 1>&2
+if [ -f /var/lock/subsys/httpd ]; then
+	/etc/rc.d/init.d/httpd restart 1>&2
+else
 	echo "Run \"/etc/rc.d/init.d/httpd start\" to start apache HTTP daemon."
 fi
 
+%post doc
+if [ -f /var/lock/subsys/resin ]; then
+	/etc/rc.d/init.d/resin restart 1>&2
+fi
+
+%postun doc
+if [ -f /var/lock/subsys/resin ]; then
+	/etc/rc.d/init.d/resin restart 1>&2
+	rm -f /var/lib/resin/webapps/resin-doc 2>/dev/null
+fi
+
+
 %files
 %defattr(644,root,root,755)
-%doc LICENSE readme.txt conf/samples/*
-
-%attr(660,root,http) %config(noreplace) %verify(not size mtime md5) %{_datadir}/resin/conf/resin.conf
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/resin.conf
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/sysconfig/resin
+%doc README
+%attr(660,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/resin/*
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/resin
 %attr(754,root,root) /etc/rc.d/init.d/resin
 
-%attr(755,root,root) %{_libexecdir}/mod_caucho.so
+%dir %{_libdir}/resin
+%attr(755,root,root) %{_libdir}/resin/*
 
 %dir %{_datadir}/resin
 %dir %{_datadir}/resin/bin
 %attr(755,root,root) %{_datadir}/resin/bin/*
 %dir %{_datadir}/resin/lib
-%dir %{_datadir}/resin/xsl
 %{_datadir}/resin/lib/*
-%{_datadir}/resin/xsl/*
+%dir %{_datadir}/resin/webapps
+%{_datadir}/resin/webapps/ROOT
 
 %dir /var/lib/resin
 %attr(770,root,http) /var/lib/resin/*
 %attr(770,root,http) %dir /var/log/resin
 %attr(770,root,http) %dir /var/run/resin
 
-%dir /home/services/httpd/resin
-%attr(770,root,http) %dir /home/httpd/resin/WEB-INF
-%dir /home/services/httpd/resin/examples
-%dir /home/services/httpd/resin/images
-%dir /home/services/httpd/resin/javadoc
-%dir /home/services/httpd/resin/java_tut
-%dir /home/services/httpd/resin/ref
-%dir /home/services/httpd/resin/css
-/home/services/httpd/resin/examples/*
-/home/services/httpd/resin/images/*
-/home/services/httpd/resin/javadoc/*
-/home/services/httpd/resin/java_tut/*
-/home/services/httpd/resin/ref/*
-/home/services/httpd/resin/*.xtp
-/home/services/httpd/resin/toc.xml
+%files -n apache-mod_caucho
+%defattr(644,root,root,755)
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd/httpd.conf/70_mod_caucho.conf
+%attr(755,root,root) %{_libexecdir}/mod_caucho.so
+
+%files doc
+%defattr(644,root,root,755)
+%{_datadir}/resin/webapps/resin-doc*
