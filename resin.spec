@@ -3,6 +3,8 @@
 #   - test the Apache module
 #   - review by PLD Java and Apache specialists
 
+%define         apxs            /usr/sbin/apxs
+%define         _pkglibdir      %(%{apxs} -q LIBEXECDIR)
 Summary:	A fast servlet and JSP engine
 Summary(pl):	Szybki silnik servletów i JSP
 Name:		resin
@@ -30,9 +32,6 @@ Provides:	jsp, servlet
 Provides:	group(http)
 Provides:	user(http)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-
-%define		_libexecdir	%{_prefix}/lib/apache
-%define		apxs		/usr/sbin/apxs
 
 %description
 Resin is a fast servlet and JSP engine supporting load balancing for
@@ -109,17 +108,14 @@ cp -f /usr/share/automake/config.* automake
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_libexecdir} \
+install -d $RPM_BUILD_ROOT%{_pkglibdir} \
 	  $RPM_BUILD_ROOT%{_sysconfdir}/{resin,httpd/httpd.conf,rc.d/init.d,sysconfig} \
 	  $RPM_BUILD_ROOT%{_datadir}/resin/{lib,bin,webapps} \
 	  $RPM_BUILD_ROOT%{_libdir}/resin \
 	  $RPM_BUILD_ROOT/var/{run,log}/resin \
 	  $RPM_BUILD_ROOT/var/lib/resin/{cache,work,tmp,webapps}
 
-cd modules/c/src/apache2
-../../../../libtool  --mode=install install mod_caucho.la $RPM_BUILD_ROOT/%{_libexecdir}
-rm $RPM_BUILD_ROOT/%{_libexecdir}/*{.a,.la}
-cd ../../../..
+libtool  --mode=install install modules/c/src/apache2/mod_caucho.la $RPM_BUILD_ROOT%{_pkglibdir}/wtf
 
 cp -R bin/*{.sh,.pl} $RPM_BUILD_ROOT%{_datadir}/resin/bin
 cp -R conf/* $RPM_BUILD_ROOT%{_sysconfdir}/resin
@@ -163,14 +159,12 @@ fi
 
 %preun -n apache-mod_caucho
 if [ "$1" = "0" ]; then
-	%{apxs} -e -A -n caucho %{_libexecdir}/mod_caucho.so 1>&2
 	if [ -f /var/lock/subsys/httpd ]; then
 		/etc/rc.d/init.d/httpd restart 1>&2
 	fi
 fi
 
 %post -n apache-mod_caucho
-%{apxs} -e -a -n caucho %{_libexecdir}/mod_caucho.so 1>&2
 if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 else
@@ -215,7 +209,7 @@ fi
 %files -n apache-mod_caucho
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/httpd/httpd.conf/70_mod_caucho.conf
-%attr(755,root,root) %{_libexecdir}/mod_caucho.so
+%attr(755,root,root) %{_pkglibdir}/mod_caucho.so
 
 %files doc
 %defattr(644,root,root,755)
