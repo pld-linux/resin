@@ -71,17 +71,17 @@ Modu³ Apache dla silnika servletów i JSP.
 
 %package doc
 Summary:	Resin online documentation
-Summary(pl):	Dokumentacja online dla Resin
+Summary(pl):	Dokumentacja online dla Resina
 Group:		Networking/Daemons
-Requires:	resin = %{epoch}:%{version}-%{release}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description doc
 Provides Resin documentation as http://localhost:8080/resin-doc/
 (assuming default Resin configuration).
 
-%description doc
-Udostêpnia dokumentacjê Resin jako http://localhost:8080/resin-doc/
-(zak³adaj±c domy¶ln± konfiguracjê Resin).
+%description doc -l pl
+Udostêpnia dokumentacjê Resina jako http://localhost:8080/resin-doc/
+(zak³adaj±c domy¶ln± konfiguracjê Resina).
 
 %prep
 %setup -q
@@ -90,7 +90,6 @@ Udostêpnia dokumentacjê Resin jako http://localhost:8080/resin-doc/
 %patch2 -p1
 
 %build
-
 # this are available in the -src tarball only, which is harder to build
 #rm -f configure # to get permissions right
 #aclocal
