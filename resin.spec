@@ -18,7 +18,7 @@ Source3:	%{name}.sysconfig
 Patch0:		%{name}-configure-test-httpd.conf.patch
 Patch1:		%{name}-apache2-test.patch
 Patch2:		%{name}-paths.patch
-URL:		http://www.caucho.com/
+URL:		http://www.caucho.com/resin/
 BuildRequires:	apache-devel
 BuildRequires:	jdk >= 1.2
 Requires(post,preun):	/sbin/chkconfig
@@ -103,8 +103,8 @@ cp -f /usr/share/automake/config.* automake
 %configure \
 	--with-apxs=%{_sbindir}/apxs \
 	--with-apache \
-	--with-jni-include="-I%{_libdir}/java/include -I%{_libdir}/java/include/linux" \
-	CFLAGS="%{rpmcflags} `%{_bindir}/apr-1-config --includes --cppflags` `%{_bindir}/apu-1-config --includes`"
+	--with-jni-include="-I/usr/%{_lib}/java/include -I/usr/%{_lib}/java/include/linux" \
+	CFLAGS="%{rpmcflags} `/usr/bin/apr-1-config --includes --cppflags` `/usr/bin/apu-1-config --includes`"
 # should be found depending on location of `java' binary
 # and/or JAVA_HOME
 #	 --with-java-home=%{_libdir}/java \
@@ -132,7 +132,7 @@ cp -R webapps/* $RPM_BUILD_ROOT%{_datadir}/resin/webapps
 
 install modules/c/src/resin_os/libresin_os.so $RPM_BUILD_ROOT%{_libdir}/resin
 
-install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/70_mod_caucho.conf
+install %{SOURCE1} $RPM_BUILD_ROOT/etc/httpd/httpd.conf/70_mod_caucho.conf
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/resin
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/resin
 
@@ -218,7 +218,7 @@ fi
 
 %files -n apache-mod_caucho
 %defattr(644,root,root,755)
-%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd/httpd.conf/70_mod_caucho.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/httpd/httpd.conf/70_mod_caucho.conf
 %attr(755,root,root) %{_libexecdir}/mod_caucho.so
 
 %files doc
