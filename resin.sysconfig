@@ -1,1 +1,4 @@
-export JAVA_HOME=/usr/java/jdk1.3
+# Customized setings for resin
+
+# Define nice level for resin
+SERVICE_RUN_NICE_LEVEL="+0"

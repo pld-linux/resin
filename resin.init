@@ -11,6 +11,8 @@
 # Source function library.
 . /etc/rc.d/init.d/functions
 
+SERVICE_RUN_NICE_LEVEL=${DEFAULT_SERVICE_RUN_NICE_LEVEL:-0}
+
 # Get service config
 [ -f /etc/sysconfig/resin ] && . /etc/sysconfig/resin
 
@@ -20,9 +22,12 @@ case "$1" in
   start)
 	# Check if the service is already running?
 	if [ ! -f /var/lock/subsys/resin ]; then
-		run_cmd "Starting Resin JSP Server" 'su -s /bin/sh http -c "/usr/share/resin/bin/srun.sh -stdout /dev/null -stderr /var/log/resin/startup.errors -pid /var/run/resin/pid start"'
+		run_cmd "Starting Resin JSP Server" "nice -n '$SERVICE_RUN_NICE_LEVEL' su -s /bin/sh http -c '/usr/share/resin/bin/httpd.sh start'"
 		RETVAL=$?
-		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/resin
+		if [ $RETVAL -eq 0 ] ; then 
+			touch /var/lock/subsys/resin
+			ln -sf resin/httpd.pid /var/run
+		fi
 	else
 		msg_already_running resin
 	fi
@@ -30,13 +35,15 @@ case "$1" in
   stop)
 	if [ -f /var/lock/subsys/resin ]; then
 		# Stop daemons.
-		run_cmd "Stopping Resin JSP Server" 'su -s /bin/sh http -c "/usr/share/resin/bin/srun.sh -stdout /dev/null -stderr /var/log/resin/startup.errors -pid /var/run/resin/pid stop"'
+		run_cmd "Stopping Resin JSP Server" "nice -n '$SERVICE_RUN_NICE_LEVEL' su -s /bin/sh http -c '/usr/share/resin/bin/httpd.sh stop'"
 		rm -f /var/lock/subsys/resin >/dev/null 2>&1
+		rm -f /var/run/resin.pid >/dev/null 2>&1
 	else
 		msg_not_running resin
 	fi
 	;;
   status)
+  	status resin
 	;;
   restart|force-reload)
 	$0 stop
