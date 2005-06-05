@@ -1,8 +1,8 @@
-diff -Nru resin1.2.b3/configure resin1.2.b3.orig/configure
---- resin1.2.b3/configure	Tue Oct 24 20:36:37 2000
-+++ resin1.2.b3.orig/configure	Fri Nov  3 13:02:32 2000
-@@ -1569,29 +1569,15 @@
-   { echo "configure: error: Can't find Apache module directory ${apache_libexec}" 1>&2; exit 1; }
+diff -dur -x '*~' resin-3.0.13.orig/configure resin-3.0.13/configure
+--- resin-3.0.13.orig/configure	2005-03-21 23:58:43.000000000 +0100
++++ resin-3.0.13/configure	2005-06-05 18:08:55.000000000 +0200
+@@ -8288,33 +8288,17 @@
+    { (exit 1); exit 1; }; }
  fi
  
 -#
@@ -10,13 +10,16 @@ diff -Nru resin1.2.b3/configure resin1.2.b3.orig/configure
 -#
 +# in PLD /etc/httpd and httpd.conf are unreadable for lusers,
 +# and we should assume they're in /etc/httpd/httpd.conf 
+ 
  if test -z "${apache_conf}" -a -n "${apxs}"; then
-   conf_dir=`${apxs} -q SYSCONFDIR`
--
--  if test -r "${conf_dir}"/httpd.conf; then
--    apache_conf=${conf_dir}/httpd.conf
--  elif test -r "${conf_dir}"/apache.conf; then
--    apache_conf=${conf_dir}/apache.conf
+   apache_confdir=`${apxs} -q SYSCONFDIR`
+ 
+-  if test -r "${apache_confdir}"/httpd.conf; then
+-    apache_conf=${apache_confdir}/httpd.conf
+-  elif test -r "${apache_confdir}"/apache.conf; then
+-    apache_conf=${apache_confdir}/apache.conf
+-  elif test -r "${apache_confdir}"/httpsd.conf; then
+-    apache_conf=${apache_confdir}/httpsd.conf
 -  fi
 -fi
 -
@@ -26,13 +29,13 @@ diff -Nru resin1.2.b3/configure resin1.2.b3.orig/configure
 -
 -if test -z "${apache_conf}" -a -r "${apache_dir}/etc/httpd.conf"; then
 -  apache_conf=${apache_dir}/etc/httpd.conf
-+  apache_conf=${conf_dir}/httpd.conf
  fi
  
 -if test -n "$apache" -a ! -r "${apache_conf}"; then
--  { echo "configure: error: Can't find Apache module configuration ${apache_conf}" 1>&2; exit 1; }
-+if test -n "$apache" -a -z "${apache_conf}"; then
-+  { echo "configure: error: Apache module configuration not found/specified" 1>&2; exit 1; }
++if test -n "$apache" -a ! -z "${apache_conf}"; then
+   { { echo "$as_me:$LINENO: error: Can't find Apache module configuration ${apache_conf}" >&5
+-echo "$as_me: error: Can't find Apache module configuration ${apache_conf}" >&2;}
++echo "$as_me: error: Apache module configuration not found/specified" >&2;}
+    { (exit 1); exit 1; }; }
  fi
  #
- # Heuristics for testing eapi
