@@ -3,8 +3,8 @@
 #   - test the Apache module
 #   - review by PLD Java and Apache specialists
 
-%define         apxs            /usr/sbin/apxs
-%define         _pkglibdir      %(%{apxs} -q LIBEXECDIR)
+%define		apxs		/usr/sbin/apxs
+%define		_pkglibdir	%(%{apxs} -q LIBEXECDIR)
 Summary:	A fast servlet and JSP engine
 Summary(pl):	Szybki silnik servletów i JSP
 Name:		resin
@@ -23,13 +23,20 @@ Patch2:		%{name}-paths.patch
 URL:		http://www.caucho.com/resin/
 BuildRequires:	apache-devel
 BuildRequires:	jdk >= 1.2
+Requires(pre):	/bin/id
+Requires(pre):	/usr/bin/getgid
+Requires(pre):	/usr/sbin/groupadd
+Requires(pre):	/usr/sbin/useradd
+Requires(postun):	/usr/sbin/groupdel
+Requires(postun):	/usr/sbin/userdel
 Requires(post,preun):	/sbin/chkconfig
 # for running even kaffe should be enough, since it's java 1.1
 Requires:	jre >= 1.1
 # Provides:	httpd
 # Provides:	webserver
-Provides:	jsp, servlet
+Provides:	jsp
 Provides:	group(http)
+Provides:	servlet
 Provides:	user(http)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -115,7 +122,7 @@ install -d $RPM_BUILD_ROOT%{_pkglibdir} \
 	  $RPM_BUILD_ROOT/var/{run,log}/resin \
 	  $RPM_BUILD_ROOT/var/lib/resin/{cache,work,tmp,webapps}
 
-libtool  --mode=install install modules/c/src/apache2/mod_caucho.la $RPM_BUILD_ROOT%{_pkglibdir}/wtf
+libtool --mode=install install modules/c/src/apache2/mod_caucho.la $RPM_BUILD_ROOT%{_pkglibdir}/wtf
 
 cp -R bin/*{.sh,.pl} $RPM_BUILD_ROOT%{_datadir}/resin/bin
 cp -R conf/* $RPM_BUILD_ROOT%{_sysconfdir}/resin
