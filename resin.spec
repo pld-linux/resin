@@ -99,11 +99,11 @@ Udostêpnia dokumentacjê Resin jako http://localhost:8080/resin-doc/
 #aclocal
 #autoconf
 
-cp -f /usr/share/automake/config.* .
+cp -f /usr/share/automake/config.* automake
 %configure \
---with-apxs=%{_sbindir}/apxs \
+	--with-apxs=%{_sbindir}/apxs \
 	--with-apache \
---with-jni-include="-I%{_prefix}/lib/java/include -I%{_prefix}/lib/java/include/linux" \
+	--with-jni-include="-I%{_libdir}/java/include -I%{_libdir}/java/include/linux" \
 	CFLAGS="%{rpmcflags} `%{_bindir}/apr-1-config --includes --cppflags` `%{_bindir}/apu-1-config --includes`"
 # should be found depending on location of `java' binary
 # and/or JAVA_HOME
