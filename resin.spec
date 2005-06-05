@@ -22,8 +22,6 @@ URL:		http://www.caucho.com/resin/
 BuildRequires:	apache-devel
 BuildRequires:	jdk >= 1.2
 Requires(post,preun):	/sbin/chkconfig
-Requires(post,preun):	/usr/sbin/apxs
-Requires:	apache
 # for running even kaffe should be enough, since it's java 1.1
 Requires:	jre >= 1.1
 # Provides:	httpd
@@ -63,7 +61,6 @@ Summary(pl):	Modu³ Apache dla silnika servletów i JSP
 Group:		Networking/Daemons
 Requires(post,preun):	/usr/sbin/apxs
 Requires:	apache
-Requires:	apache(EAPI)
 Requires:	resin = %{epoch}:%{version}-%{release}
 
 %description -n apache-mod_caucho
