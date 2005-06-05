@@ -1,0 +1,129 @@
+diff -dur -x '*~' resin-3.0.13.orig/bin/wrapper.pl.in resin-3.0.13/bin/wrapper.pl.in
+--- resin-3.0.13.orig/bin/wrapper.pl.in	2005-03-21 18:52:25.000000000 +0100
++++ resin-3.0.13/bin/wrapper.pl.in	2005-06-05 21:02:24.000000000 +0200
+@@ -16,7 +16,7 @@
+ #
+ # Location of the Resin directories, usually scripts can find it
+ #
+-$RESIN_HOME="";
++$RESIN_HOME="/usr/share/resin";
+ #
+ # Location of the server directories, defaults to RESIN_HOME.
+ #
+@@ -24,7 +24,7 @@
+ #
+ # Location of JAVA_HOME, usually scripts can find it
+ #
+-$JAVA_HOME="";
++$JAVA_HOME="/usr/lib/java";
+ #
+ # Location of java executable, usually scripts can find it
+ #
+@@ -111,7 +111,7 @@
+ 
+ $verbose=0;
+ $thread="";
+-$conf="";
++$conf="-conf /etc/resin/resin.conf";
+ $exe=$0;
+ $nojit="";
+ $chdir="";
+@@ -343,7 +343,7 @@
+ }
+ 
+ if (! $LIBRARY_PATH) {
+-    $LIBRARY_PATH = "${RESIN_HOME}/libexec";
++    $LIBRARY_PATH = "/var/lib/resin:/var/lib64/resin";
+ }
+ 
+ $ENV{"LD_LIBRARY_PATH"} = $ENV{"LD_LIBRARY_PATH"} . ":$LIBRARY_PATH";
+@@ -406,11 +406,11 @@
+ }
+ 
+ if (! $pid_file) {
+-    $pid_file = "$SERVER_ROOT/${name}.pid";
++    $pid_file = "/var/run/resin/${name}.pid";
+ }
+ 
+ if ($pid_file =~ "^[^/]") {
+-    $pid_file = "$SERVER_ROOT/$pid_file";
++    $pid_file = "/var/run/resin/$pid_file";
+ }
+ #
+ # If desired, close the old server
+@@ -561,18 +561,18 @@
+ $JAVA_ARGS .= " -Dresin.home=$SERVER_ROOT $EXTRA_JAVA_ARGS";
+ 
+ if ($cmd eq "start" || $cmd eq "restart") {
+-  mkdir("$SERVER_ROOT/log", 0755);
++  mkdir("/var/log/resin", 0755);
+ 
+   if (! $stdout_log) {
+-      $stdout_log = "$SERVER_ROOT/log/stdout.log";
++      $stdout_log = "/var/log/resin/stdout.log";
+   }
+ 
+   if (! $stderr_log) {
+-      $stderr_log = "$SERVER_ROOT/log/stderr.log";
++      $stderr_log = "/var/log/resin/stderr.log";
+   }
+ 
+   if (! $jvm_log) {
+-      $jvm_log = "$SERVER_ROOT/log/jvm.log";
++      $jvm_log = "/var/log/resin/jvm.log";
+   }
+ }
+ 
+diff -dur -x '*~' resin-3.0.13.orig/conf/resin.conf resin-3.0.13/conf/resin.conf
+--- resin-3.0.13.orig/conf/resin.conf	2005-05-06 18:07:34.000000000 +0200
++++ resin-3.0.13/conf/resin.conf	2005-06-05 21:04:02.000000000 +0200
+@@ -3,6 +3,7 @@
+   -->
+ <resin xmlns="http://caucho.com/ns/resin"
+        xmlns:resin="http://caucho.com/ns/resin/core">
++
+   <!--
+      - Logging configuration for the JDK logging API.
+     -->
+@@ -12,6 +13,8 @@
+   <log name="com.caucho.loader" level="config" path="stdout:"
+        timestamp="[%H:%M:%S.%s] "/>
+ 
++  <work-dir>/var/lib/resin/tmp</work-dir>
++
+   <!--
+      - For production sites, change dependency-check-interval to something
+      - like 600s, so it only checks for updates every 10 minutes.
+@@ -198,12 +201,12 @@
+          - With another web server, like Apache, this can be commented out
+          - because the web server will log this information.
+         -->
+-      <access-log path="logs/access.log" 
++      <access-log path="/var/log/resin/access.log" 
+             format='%h %l %u %t "%r" %s %b "%{Referer}i" "%{User-Agent}i"'
+             rollover-period="1W"/>
+ 
+       <!-- creates the webapps directory for .war expansion -->
+-      <web-app-deploy path="webapps"/>
++      <web-app-deploy path="/usr/share/resin/webapps" expand-path="/var/lib/resin/webapps"/>
+ 
+       <!-- creates the deploy directory for .ear expansion -->
+       <ear-deploy path="deploy">
+@@ -226,7 +229,7 @@
+     </host-default>
+ 
+     <!-- includes the web-app-default for default web-app behavior -->
+-    <resin:import path="${resinHome}/conf/app-default.xml"/>
++    <resin:import path="/etc/resin/app-default.xml"/>
+ 
+     <!-- configures a deployment directory for virtual hosts -->
+     <host-deploy path="hosts">
+@@ -241,7 +244,7 @@
+          - configures an explicit root web-app matching the
+          - webapp's ROOT
+         -->
+-      <web-app id="/" document-directory="webapps/ROOT"/>
++      <web-app id="/" document-directory="webapps/ROOT" temp-dir="/var/lib/resin/tmp" work-dir="/var/lib/resin/work"/>
+     </host>
+   </server>
+ </resin>
