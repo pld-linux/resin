@@ -1,0 +1,12 @@
+diff -dur -x '*~' resin-3.0.13.orig/configure resin-3.0.13/configure
+--- resin-3.0.13.orig/configure	2005-06-05 18:09:19.000000000 +0200
++++ resin-3.0.13/configure	2005-06-05 18:10:03.000000000 +0200
+@@ -8629,7 +8629,7 @@
+ 
+ if test -z "$apache"; then
+   a=b
+-elif test -r "${apache_include}/apr_thread_mutex.h"; then
++elif test -r "${apache_include}/ap_mpm.h"; then
+   echo "Using Apache 2.0 configuration ${apache_conf}"
+ 
+   plugins="$plugins apache2"
