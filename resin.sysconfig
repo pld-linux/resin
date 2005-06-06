@@ -1,4 +1,4 @@
 # Customized setings for resin
 
 # Define nice level for resin
-SERVICE_RUN_NICE_LEVEL="+0"
+SERVICE_RUN_NICE_LEVEL="0"
