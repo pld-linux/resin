@@ -24,7 +24,7 @@ case "$1" in
 	if [ ! -f /var/lock/subsys/resin ]; then
 		run_cmd "Starting Resin JSP Server" "nice -n '$SERVICE_RUN_NICE_LEVEL' su -s /bin/sh http -c '/usr/share/resin/bin/httpd.sh start'"
 		RETVAL=$?
-		if [ $RETVAL -eq 0 ] ; then 
+		if [ $RETVAL -eq 0 ]; then
 			touch /var/lock/subsys/resin
 			ln -sf resin/httpd.pid /var/run
 		fi
