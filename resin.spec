@@ -23,19 +23,18 @@ Patch2:		%{name}-paths.patch
 URL:		http://www.caucho.com/resin/
 BuildRequires:	apache-devel
 BuildRequires:	jdk >= 1.2
+Requires(post,preun):	/sbin/chkconfig
+Requires(postun):	/usr/sbin/groupdel
+Requires(postun):	/usr/sbin/userdel
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
-Requires(postun):	/usr/sbin/groupdel
-Requires(postun):	/usr/sbin/userdel
-Requires(post,preun):	/sbin/chkconfig
 # for running even kaffe should be enough, since it's java 1.1
 Requires:	jre >= 1.1
-# Provides:	httpd
 # Provides:	webserver
-Provides:	jsp
 Provides:	group(http)
+Provides:	jsp
 Provides:	servlet
 Provides:	user(http)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
