@@ -6,7 +6,7 @@
 %define		apxs		/usr/sbin/apxs
 %define		_pkglibdir	%(%{apxs} -q LIBEXECDIR)
 Summary:	A fast servlet and JSP engine
-Summary(pl.UTF-8):   Szybki silnik servletów i JSP
+Summary(pl.UTF-8):	Szybki silnik servletów i JSP
 Name:		resin
 Version:	3.0.13
 Release:	0.1
@@ -62,7 +62,7 @@ Resin z Apache należy zainstalować dodatkowo pakiet
 
 %package -n apache-mod_caucho
 Summary:	An Apache module for Resin servlet and JSP engine
-Summary(pl.UTF-8):   Moduł Apache dla silnika servletów i JSP
+Summary(pl.UTF-8):	Moduł Apache dla silnika servletów i JSP
 Group:		Networking/Daemons
 Requires(post,preun):	/usr/sbin/apxs
 Requires:	apache
@@ -76,7 +76,7 @@ Moduł Apache dla silnika servletów i JSP.
 
 %package doc
 Summary:	Resin online documentation
-Summary(pl.UTF-8):   Dokumentacja online dla Resina
+Summary(pl.UTF-8):	Dokumentacja online dla Resina
 Group:		Networking/Daemons
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
