@@ -6,7 +6,7 @@
 %define		apxs		/usr/sbin/apxs
 %define		_pkglibdir	%(%{apxs} -q LIBEXECDIR)
 Summary:	A fast servlet and JSP engine
-Summary(pl):	Szybki silnik servletów i JSP
+Summary(pl.UTF-8):   Szybki silnik servletÃ³w i JSP
 Name:		resin
 Version:	3.0.13
 Release:	0.1
@@ -49,20 +49,20 @@ palm pilots to Mozilla.
 This package provides the standalone Resin webserver only. Install
 "apache-mod_caucho" package to use Resin with apache.
 
-%description -l pl
-Resin to szybki silnik servletowy i JSP, obs³uguj±cy load balancing
-aby osi±gn±æ wiêksz± niezawodno¶æ. Resin wspiera oddzielenie tre¶ci od
-stylu poprzez obs³ugê XSL-a. Servlety mog± generowaæ prosty XML i
-u¿ywaæ filtra XSL do formatowania wyników zale¿nie od mo¿liwo¶ci
-klienta, od Palm Pilotów do Mozilli.
+%description -l pl.UTF-8
+Resin to szybki silnik servletowy i JSP, obsÅ‚ugujÄ…cy load balancing
+aby osiÄ…gnÄ…Ä‡ wiÄ™kszÄ… niezawodnoÅ›Ä‡. Resin wspiera oddzielenie treÅ›ci od
+stylu poprzez obsÅ‚ugÄ™ XSL-a. Servlety mogÄ… generowaÄ‡ prosty XML i
+uÅ¼ywaÄ‡ filtra XSL do formatowania wynikÃ³w zaleÅ¼nie od moÅ¼liwoÅ›ci
+klienta, od Palm PilotÃ³w do Mozilli.
 
-Ten pakiet zawiera jedynie samodzielny serwer WWW Resina. Aby u¿yæ
-Resin z Apache nale¿y zainstalowaæ dodatkowo pakiet
+Ten pakiet zawiera jedynie samodzielny serwer WWW Resina. Aby uÅ¼yÄ‡
+Resin z Apache naleÅ¼y zainstalowaÄ‡ dodatkowo pakiet
 "apache-mod_caucho".
 
 %package -n apache-mod_caucho
 Summary:	An Apache module for Resin servlet and JSP engine
-Summary(pl):	Modu³ Apache dla silnika servletów i JSP
+Summary(pl.UTF-8):   ModuÅ‚ Apache dla silnika servletÃ³w i JSP
 Group:		Networking/Daemons
 Requires(post,preun):	/usr/sbin/apxs
 Requires:	apache
@@ -71,12 +71,12 @@ Requires:	resin = %{epoch}:%{version}-%{release}
 %description -n apache-mod_caucho
 An Apache module for Resin servlet and JSP engine.
 
-%description -n apache-mod_caucho -l pl
-Modu³ Apache dla silnika servletów i JSP.
+%description -n apache-mod_caucho -l pl.UTF-8
+ModuÅ‚ Apache dla silnika servletÃ³w i JSP.
 
 %package doc
 Summary:	Resin online documentation
-Summary(pl):	Dokumentacja online dla Resina
+Summary(pl.UTF-8):   Dokumentacja online dla Resina
 Group:		Networking/Daemons
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
@@ -84,9 +84,9 @@ Requires:	%{name} = %{epoch}:%{version}-%{release}
 Provides Resin documentation as http://localhost:8080/resin-doc/
 (assuming default Resin configuration).
 
-%description doc -l pl
-Udostêpnia dokumentacjê Resina jako http://localhost:8080/resin-doc/
-(zak³adaj±c domy¶ln± konfiguracjê Resina).
+%description doc -l pl.UTF-8
+UdostÄ™pnia dokumentacjÄ™ Resina jako http://localhost:8080/resin-doc/
+(zakÅ‚adajÄ…c domyÅ›lnÄ… konfiguracjÄ™ Resina).
 
 %prep
 %setup -q
