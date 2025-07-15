@@ -90,9 +90,9 @@ Udostępnia dokumentację Resina jako http://localhost:8080/resin-doc/
 
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
+%patch -P0 -p1
+%patch -P1 -p1
+%patch -P2 -p1
 
 %build
 # this are available in the -src tarball only, which is harder to build
